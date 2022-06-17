@@ -72,9 +72,8 @@ Info get_info(std::ifstream& file)
 		}
 		else if (line.find("letters") != std::string::npos)
 		{
-			std::string substr = line.substr(line.find(':') + 2, line.length());
-			info.key = std::atoi(substr.c_str());
-			report("Found key: '" + substr + "'");
+			info.key = line.substr(line.find(':') + 2, line.length());
+			report("Found key: '" + info.key + "'");
 		}
 
 		// Update buffers (stores previous two lines)
