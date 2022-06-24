@@ -1,6 +1,12 @@
 #pragma once
 #include <string>
+#include <thread>
 #include <vector>
+
+enum class verboseness
+{
+	quiet, standard, extra, debug
+};
 
 struct Equation
 {
@@ -31,4 +37,15 @@ struct Info
 	std::vector<Equation> equations;
 };
 
+struct Options
+{
+	verboseness verbosity = verboseness::standard;
+	std::string filename = "puzzle.txt";
+	// Error checked in get_options
+	unsigned int thread_count = std::thread::hardware_concurrency();
+};
+
+void report(const std::string& message, verboseness v);
+void err(const std::string& message);
 Info get_info(std::ifstream& file);
+Options get_options(int argc, char* argv[]);

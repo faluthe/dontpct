@@ -3,10 +3,7 @@
 
 #include "dontpct.h"
 
-void report(const std::string& message);
-void err(const std::string& message);
-
-int extra_letters = 0;
+std::size_t extra_letters = 0;
 
 Equation::Equation(const std::string& m, const std::string& s, const std::string& d)
 {
@@ -62,18 +59,18 @@ Info get_info(std::ifstream& file)
 			Equation e{ buf_minuend, buf_subtrahend, line };
 			info.equations.push_back(e);
 
-			report("Found equation: '" + e.minuend + "' - '" + e.subtrahend + "' = '" + e.difference + "'");
+			report("Found equation: '" + e.minuend + "' - '" + e.subtrahend + "' = '" + e.difference + "'", verboseness::extra);
 		}
 		else if (line.find("base") != std::string::npos)
 		{
 			std::string substr = line.substr(line.find(':') + 2, line.length());
 			info.base = std::atoi(substr.c_str());
-			report("Found base: '" + substr + "'");
+			report("Found base: '" + substr + "'", verboseness::extra);
 		}
 		else if (line.find("letters") != std::string::npos)
 		{
 			info.key = line.substr(line.find(':') + 2, line.length());
-			report("Found key: '" + info.key + "'");
+			report("Found key: '" + info.key + "'", verboseness::extra);
 		}
 
 		// Update buffers (stores previous two lines)
@@ -84,21 +81,23 @@ Info get_info(std::ifstream& file)
 	bool fail = false;
 	if (!info.base)
 	{
-		report("Missing base");
+		report("Missing base", verboseness::quiet);
 		fail = true;
 	}
 	if (info.key.empty())
 	{
-		report("Missing key");
+		report("Missing key", verboseness::quiet);
 		fail = true;
 	}
 	if (info.equations.empty())
 	{
-		report("Missing equations");
+		report("Missing equations", verboseness::quiet);
 		fail = true;
 	}
 	if (fail)
 		err("Information unobtainable");
+
+	report("", verboseness::extra);
 
 	return info;
 }
